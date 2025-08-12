@@ -1,0 +1,186 @@
+// src/app/components/task-list/task-list.component.scss
+.task-list-container {
+  padding: 1rem;
+  min-height: 200px;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f0f0f0;
+    transform: translateX(4px);
+  }
+
+  &.completed {
+    opacity: 0.7;
+    
+    .task-title {
+      text-decoration: line-through;
+      color: #888;
+    }
+  }
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.toggle-button {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #667eea;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: #5a6fd8;
+    transform: scale(1.1);
+  }
+
+  &.checked {
+    background: #667eea;
+    color: white;
+  }
+}
+
+.checkmark {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.task-title {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.4;
+  cursor: text;
+  word-break: break-word;
+
+  &:hover {
+    color: #667eea;
+  }
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.task-item:hover .task-actions {
+  opacity: 1;
+}
+
+.edit-button,
+.delete-button,
+.save-button,
+.cancel-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+  }
+}
+
+.task-edit {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 2px solid #667eea;
+  border-radius: 4px;
+  font-size: 1rem;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #5a6fd8;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.no-tasks {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #888;
+
+  .no-tasks-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .task-list-container {
+    padding: 0.5rem;
+  }
+
+  .task-item {
+    padding: 0.75rem;
+  }
+
+  .task-title {
+    font-size: 0.9rem;
+  }
+
+  .task-actions {
+    opacity: 1; // Always show on mobile
+  }
+
+  .no-tasks {
+    padding: 2rem 0.5rem;
+
+    .no-tasks-icon {
+      font-size: 3rem;
+    }
+  }
+}

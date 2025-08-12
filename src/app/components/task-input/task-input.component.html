@@ -1,0 +1,29 @@
+<!-- src/app/components/task-input/task-input.component.html -->
+<div class="task-input-container">
+  <form (ngSubmit)="onSubmit()" class="task-form">
+    <div class="input-group">
+      <input
+        type="text"
+        [formControl]="taskControl"
+        placeholder="What needs to be done?"
+        class="task-input"
+        [class.invalid]="isInvalid"
+        maxlength="200"
+      >
+      <button
+        type="submit"
+        [disabled]="!taskControl.valid"
+        class="add-button"
+        title="Add task"
+      >
+        <span class="add-icon">+</span>
+      </button>
+    </div>
+    
+    <div class="error-message" *ngIf="isInvalid">
+      <span *ngIf="taskControl.errors?.['required']">Task cannot be empty</span>
+      <span *ngIf="taskControl.errors?.['minlength']">Task is too short</span>
+      <span *ngIf="taskControl.errors?.['maxlength']">Task is too long (max 200 characters)</span>
+    </div>
+  </form>
+</div>

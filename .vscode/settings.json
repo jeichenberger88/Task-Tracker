@@ -1,0 +1,22 @@
+// .vscode/settings.json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "angular.experimental-ivy": true,
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  },
+  "files.associations": {
+    "*.html": "html"
+  },
+  "html.suggest.angular1": false,
+  "html.suggest.ionic": false,
+  "typescript.suggest.autoImports": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5"
+}

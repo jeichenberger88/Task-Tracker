@@ -1,0 +1,158 @@
+<!-- src/app/app.component.html -->
+<div class="app-container" [class.dark-mode]="isDarkMode">
+  <header class="header">
+    <div class="header-top">
+      <h1 class="app-title">
+        <span class="title-icon">✨</span>
+        {{ title }}
+      </h1>
+      
+      <!-- Dark Mode Toggle -->
+      <button class="theme-toggle" (click)="toggleDarkMode()" title="Toggle theme">
+        <div class="toggle-track">
+          <div class="toggle-thumb" [class.dark]="isDarkMode">
+            <span class="toggle-icon">{{ isDarkMode ? '🌙' : '☀️' }}</span>
+          </div>
+        </div>
+      </button>
+    </div>
+    
+    <nav class="nav">
+      <button 
+        (click)="taskService.setFilter('all')"
+        [class.active]="taskService.filterSignal() === 'all'"
+        class="nav-link"
+      >
+        <span class="nav-icon">📋</span>
+        All <span class="badge">{{ taskService.taskCounts().total }}</span>
+      </button>
+      <button 
+        (click)="taskService.setFilter('active')"
+        [class.active]="taskService.filterSignal() === 'active'"
+        class="nav-link"
+      >
+        <span class="nav-icon">⚡</span>
+        Active <span class="badge">{{ taskService.taskCounts().active }}</span>
+      </button>
+      <button 
+        (click)="taskService.setFilter('completed')"
+        [class.active]="taskService.filterSignal() === 'completed'"
+        class="nav-link"
+      >
+        <span class="nav-icon">✅</span>
+        Done <span class="badge">{{ taskService.taskCounts().completed }}</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="main">
+    <!-- Enhanced Task Input -->
+    <div class="task-input-container">
+      <div class="input-group">
+        <div class="input-wrapper">
+          <span class="input-icon">💭</span>
+          <input
+            type="text"
+            [(ngModel)]="newTaskTitle"
+            (keydown.enter)="addTask()"
+            placeholder="What needs to be done?"
+            class="task-input"
+            maxlength="200"
+          >
+        </div>
+        <button
+          (click)="addTask()"
+          [disabled]="!newTaskTitle.trim()"
+          class="add-button"
+          title="Add task"
+        >
+          <span class="button-icon">+</span>
+          <span class="button-text">Add</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Enhanced Task List -->
+    <div class="task-list-container">
+      <div class="tasks" *ngIf="taskService.filteredTasks().length > 0; else noTasks">
+        <div
+          *ngFor="let task of taskService.filteredTasks(); let i = index"
+          class="task-item"
+          [class.completed]="task.completed"
+          [style.animation-delay.ms]="i * 100"
+        >
+          <!-- Normal view -->
+          <div class="task-content" *ngIf="editingTaskId !== task.id">
+            <button
+              (click)="taskService.toggleTask(task.id)"
+              class="toggle-button"
+              [class.checked]="task.completed"
+            >
+              <div class="checkbox-inner">
+                <span class="checkmark" *ngIf="task.completed">✓</span>
+              </div>
+            </button>
+            
+            <div class="task-text">
+              <span
+                class="task-title"
+                (dblclick)="startEditing(task)"
+              >
+                {{ task.title }}
+              </span>
+              <span class="task-date">{{ task.createdAt | date:'MMM d' }}</span>
+            </div>
+            
+            <div class="task-actions">
+              <button (click)="startEditing(task)" class="action-button edit" title="Edit">
+                ✏️
+              </button>
+              <button (click)="deleteTask(task.id)" class="action-button delete" title="Delete">
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <!-- Edit mode -->
+          <div class="task-edit" *ngIf="editingTaskId === task.id">
+            <input
+              type="text"
+              [(ngModel)]="editingTitle"
+              (keydown)="onEditKeydown($event)"
+              (blur)="saveEdit()"
+              class="edit-input"
+              #editInput
+            >
+            <div class="edit-actions">
+              <button (click)="saveEdit()" class="action-button save">✅</button>
+              <button (click)="cancelEdit()" class="action-button cancel">❌</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noTasks>
+        <div class="no-tasks">
+          <div class="no-tasks-animation">
+            <div class="floating-icon">📋</div>
+          </div>
+          <h3>{{ getEmptyStateTitle() }}</h3>
+          <p>{{ getEmptyStateMessage() }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span class="footer-text">Built with Angular 16+ • Served by Caddy</span>
+      <div class="footer-stats">
+        {{ taskService.taskCounts().total }} tasks total
+      </div>
+    </div>
+  </footer>
+
+  <!-- PWA Install Prompt -->
+  <app-pwa-install></app-pwa-install>
+
+</div>

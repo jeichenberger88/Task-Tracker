@@ -1,0 +1,27 @@
+<!-- src/app/components/pwa-install/pwa-install.component.html -->
+<div class="install-prompt" *ngIf="showInstallPrompt && !isInstalled">
+  <div class="prompt-content">
+    <div class="prompt-icon">📱</div>
+    <div class="prompt-text">
+      <h3>Install Task Tracker</h3>
+      <p>Add to your home screen for quick access!</p>
+    </div>
+    <div class="prompt-actions">
+      <button class="install-btn" (click)="installApp()">
+        <span class="btn-icon">⬇️</span>
+        Install
+      </button>
+      <button class="dismiss-btn" (click)="dismissPrompt()">
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Install success message -->
+<div class="install-success" *ngIf="isInstalled">
+  <div class="success-content">
+    <span class="success-icon">✅</span>
+    <span>App installed! Find it on your home screen.</span>
+  </div>
+</div>

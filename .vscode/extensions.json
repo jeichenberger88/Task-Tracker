@@ -1,0 +1,11 @@
+// .vscode/extensions.json
+{
+  "recommendations": [
+    "Angular.ng-template",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "formulahendry.auto-rename-tag",
+    "CoenraadS.bracket-pair-colorizer-2"
+  ]
+}
