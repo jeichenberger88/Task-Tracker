@@ -174,7 +174,7 @@
             type="submit"
             [disabled]="!taskForm.valid"
             class="add-button"
-            title="Add task"
+            title="Add task (Ctrl+Enter)"
           >
             <span class="button-icon">+</span>
             <span class="button-text">Add</span>
@@ -264,7 +264,7 @@
             
             <!-- Checkbox -->
             <button
-              (click)="taskService.toggleTask(task.id)"
+              (click)="taskService.toggleTask(task.id); updateDocumentTitle()"
               class="toggle-button"
               [class.checked]="task.completed"
             >
@@ -278,7 +278,7 @@
               <div class="task-title">{{ task.title }}</div>
               
               <div class="task-meta">
-                <span class="task-date">{{ formatDate(task.createdAt) }}</span>
+                <span class="task-date" [title]="formatDate(task.createdAt)">{{ formatRelativeTime(task.createdAt) }}</span>
                 
                 <span 
                   class="due-date"
