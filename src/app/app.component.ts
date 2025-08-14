@@ -54,7 +54,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const savedTheme = localStorage.getItem('darkMode');
-    this.isDarkMode = savedTheme === 'true';
+    // Default to dark mode if no preference is saved
+    this.isDarkMode = savedTheme !== null ? savedTheme === 'true' : true;
     this.applyTheme();
     
     // Request notification permissions
