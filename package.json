@@ -2,14 +2,14 @@
   "name": "task-tracker",
   "version": "0.0.0",
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "scripts": {
-    "ng": "npx ng",
-    "start": "npx ng serve",
-    "build": "npx @angular/cli build --configuration=production",
-    "watch": "npx ng build --watch --configuration development",
-    "test": "npx ng test"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --configuration=production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "prettier": {
     "overrides": [
