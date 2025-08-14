@@ -7,16 +7,67 @@
         {{ title }}
       </h1>
       
-      <!-- Dark Mode Toggle -->
-      <button class="theme-toggle" (click)="toggleDarkMode()" title="Toggle theme">
-        <div class="toggle-track">
-          <div class="toggle-thumb" [class.dark]="isDarkMode">
-            <span class="toggle-icon">{{ isDarkMode ? '🌙' : '☀️' }}</span>
+      <!-- Actions -->
+      <div class="header-actions">
+        <button 
+          class="action-btn"
+          (click)="toggleImportExport()"
+          title="Import/Export tasks"
+        >
+          📤
+        </button>
+        
+        <button 
+          class="theme-toggle" 
+          (click)="toggleDarkMode()" 
+          title="Toggle theme"
+        >
+          <div class="toggle-track">
+            <div class="toggle-thumb" [class.dark]="isDarkMode">
+              <span class="toggle-icon">{{ isDarkMode ? '🌙' : '☀️' }}</span>
+            </div>
           </div>
-        </div>
-      </button>
+        </button>
+      </div>
     </div>
     
+    <!-- Search and Filters -->
+    <div class="search-filters">
+      <div class="search-container">
+        <input
+          type="text"
+          placeholder="Search tasks, tags, or categories..."
+          class="search-input"
+          [value]="taskService.searchSignal()"
+          (input)="onSearchChange(($any($event.target)).value)"
+        >
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <div class="filters">
+        <select 
+          class="filter-select"
+          [value]="taskService.selectedCategorySignal()"
+          (change)="onCategoryChange(($any($event.target)).value)"
+        >
+          <option value="">All Categories</option>
+          <option *ngFor="let category of taskService.categories()" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+        
+        <button 
+          class="clear-filters-btn"
+          (click)="clearFilters()"
+          *ngIf="taskService.searchSignal() || taskService.selectedCategorySignal()"
+          title="Clear filters"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+    
+    <!-- Navigation -->
     <nav class="nav">
       <button 
         (click)="taskService.setFilter('all')"
@@ -35,6 +86,33 @@
         Active <span class="badge">{{ taskService.taskCounts().active }}</span>
       </button>
       <button 
+        (click)="taskService.setFilter('overdue')"
+        [class.active]="taskService.filterSignal() === 'overdue'"
+        class="nav-link overdue"
+        *ngIf="taskService.taskCounts().overdue > 0"
+      >
+        <span class="nav-icon">🚨</span>
+        Overdue <span class="badge danger">{{ taskService.taskCounts().overdue }}</span>
+      </button>
+      <button 
+        (click)="taskService.setFilter('today')"
+        [class.active]="taskService.filterSignal() === 'today'"
+        class="nav-link today"
+        *ngIf="taskService.taskCounts().dueToday > 0"
+      >
+        <span class="nav-icon">📅</span>
+        Today <span class="badge warning">{{ taskService.taskCounts().dueToday }}</span>
+      </button>
+      <button 
+        (click)="taskService.setFilter('upcoming')"
+        [class.active]="taskService.filterSignal() === 'upcoming'"
+        class="nav-link"
+        *ngIf="taskService.taskCounts().upcoming > 0"
+      >
+        <span class="nav-icon">⏰</span>
+        Upcoming <span class="badge">{{ taskService.taskCounts().upcoming }}</span>
+      </button>
+      <button 
         (click)="taskService.setFilter('completed')"
         [class.active]="taskService.filterSignal() === 'completed'"
         class="nav-link"
@@ -46,43 +124,145 @@
   </header>
 
   <main class="main">
-    <!-- Enhanced Task Input -->
-    <div class="task-input-container">
-      <div class="input-group">
-        <div class="input-wrapper">
-          <span class="input-icon">💭</span>
-          <input
-            type="text"
-            [(ngModel)]="newTaskTitle"
-            (keydown.enter)="addTask()"
-            placeholder="What needs to be done?"
-            class="task-input"
-            maxlength="200"
-          >
+    <!-- Import/Export Panel -->
+    <div class="import-export-panel" *ngIf="showImportExport">
+      <div class="panel-content">
+        <h3>Data Management</h3>
+        <div class="panel-actions">
+          <button class="panel-btn export-btn" (click)="exportTasks()">
+            📤 Export Tasks
+          </button>
+          <label class="panel-btn import-btn">
+            📥 Import Tasks
+            <input
+              type="file"
+              accept=".json"
+              (change)="onFileSelected($event)"
+              style="display: none;"
+            >
+          </label>
         </div>
-        <button
-          (click)="addTask()"
-          [disabled]="!newTaskTitle.trim()"
-          class="add-button"
-          title="Add task"
-        >
-          <span class="button-icon">+</span>
-          <span class="button-text">Add</span>
-        </button>
+        <button class="close-panel" (click)="toggleImportExport()">✕</button>
       </div>
     </div>
 
-    <!-- Enhanced Task List -->
+    <!-- Enhanced Task Input -->
+    <div class="task-input-container">
+      <form [formGroup]="taskForm" (ngSubmit)="addTask()" class="task-form">
+        <div class="input-group">
+          <div class="input-wrapper">
+            <span class="input-icon">💭</span>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="What needs to be done?"
+              class="task-input"
+              [class.error]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched"
+            >
+          </div>
+          
+          <button
+            class="toggle-advanced-btn"
+            type="button"
+            (click)="toggleAdvancedForm()"
+            title="More options"
+          >
+            {{ showAdvancedForm ? '−' : '+' }}
+          </button>
+          
+          <button
+            type="submit"
+            [disabled]="!taskForm.valid"
+            class="add-button"
+            title="Add task"
+          >
+            <span class="button-icon">+</span>
+            <span class="button-text">Add</span>
+          </button>
+        </div>
+        
+        <!-- Advanced form fields -->
+        <div class="advanced-fields" *ngIf="showAdvancedForm">
+          <div class="field-row">
+            <div class="field">
+              <label>Due Date</label>
+              <input type="date" formControlName="dueDate" class="field-input">
+            </div>
+            
+            <div class="field">
+              <label>Priority</label>
+              <select formControlName="priority" class="field-input">
+                <option value="low">🟢 Low</option>
+                <option value="medium">🟡 Medium</option>
+                <option value="high">🔴 High</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="field-row">
+            <div class="field">
+              <label>Category</label>
+              <input
+                type="text"
+                formControlName="category"
+                placeholder="e.g., Work, Personal"
+                class="field-input"
+                list="categories-list"
+              >
+              <datalist id="categories-list">
+                <option *ngFor="let category of taskService.categories()" [value]="category">
+              </datalist>
+            </div>
+            
+            <div class="field">
+              <label>Tags</label>
+              <input
+                type="text"
+                formControlName="tags"
+                placeholder="tag1, tag2, tag3"
+                class="field-input"
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Enhanced Task List with Drag & Drop -->
     <div class="task-list-container">
-      <div class="tasks" *ngIf="taskService.filteredTasks().length > 0; else noTasks">
+      <div 
+        class="tasks" 
+        *ngIf="taskService.filteredTasks().length > 0; else noTasks"
+        cdkDropList
+        (cdkDropListDropped)="onDrop($event)"
+      >
         <div
-          *ngFor="let task of taskService.filteredTasks(); let i = index"
+          *ngFor="let task of taskService.filteredTasks(); let i = index; trackBy: taskService.trackByTaskId"
           class="task-item"
           [class.completed]="task.completed"
-          [style.animation-delay.ms]="i * 100"
+          [class.overdue]="isOverdue(task)"
+          [class.due-today]="isDueToday(task)"
+          [class.editing]="editingTaskId === task.id"
+          [style.animation-delay.ms]="i * 50"
+          cdkDrag
         >
+          <!-- Drag handle -->
+          <div class="drag-handle" cdkDragHandle title="Drag to reorder">
+            ⋮⋮
+          </div>
+
           <!-- Normal view -->
           <div class="task-content" *ngIf="editingTaskId !== task.id">
+            <!-- Priority indicator -->
+            <div 
+              class="priority-indicator"
+              [style.background-color]="getPriorityColor(task.priority)"
+              [title]="task.priority + ' priority'"
+            >
+              {{ getPriorityIcon(task.priority) }}
+            </div>
+            
+            <!-- Checkbox -->
             <button
               (click)="taskService.toggleTask(task.id)"
               class="toggle-button"
@@ -93,16 +273,39 @@
               </div>
             </button>
             
-            <div class="task-text">
-              <span
-                class="task-title"
-                (dblclick)="startEditing(task)"
-              >
-                {{ task.title }}
-              </span>
-              <span class="task-date">{{ task.createdAt | date:'MMM d' }}</span>
+            <!-- Task info -->
+            <div class="task-info" (dblclick)="startEditing(task)">
+              <div class="task-title">{{ task.title }}</div>
+              
+              <div class="task-meta">
+                <span class="task-date">{{ formatDate(task.createdAt) }}</span>
+                
+                <span 
+                  class="due-date"
+                  *ngIf="task.dueDate"
+                  [class.overdue]="isOverdue(task)"
+                  [class.due-today]="isDueToday(task)"
+                >
+                  Due: {{ formatRelativeDate(task.dueDate) }}
+                </span>
+                
+                <span class="category" *ngIf="task.category">
+                  📁 {{ task.category }}
+                </span>
+                
+                <div class="tags" *ngIf="task.tags.length > 0">
+                  <span 
+                    class="tag" 
+                    *ngFor="let tag of task.tags"
+                    (click)="taskService.setSearch(tag)"
+                  >
+                    #{{ tag }}
+                  </span>
+                </div>
+              </div>
             </div>
             
+            <!-- Actions -->
             <div class="task-actions">
               <button (click)="startEditing(task)" class="action-button edit" title="Edit">
                 ✏️
@@ -115,22 +318,62 @@
 
           <!-- Edit mode -->
           <div class="task-edit" *ngIf="editingTaskId === task.id">
-            <input
-              type="text"
-              [(ngModel)]="editingTitle"
-              (keydown)="onEditKeydown($event)"
-              (blur)="saveEdit()"
-              class="edit-input"
-              #editInput
-            >
-            <div class="edit-actions">
-              <button (click)="saveEdit()" class="action-button save">✅</button>
-              <button (click)="cancelEdit()" class="action-button cancel">❌</button>
+            <form [formGroup]="editForm" (ngSubmit)="saveEdit()" class="edit-form">
+              <div class="edit-fields">
+                <input
+                  type="text"
+                  formControlName="title"
+                  class="edit-input"
+                  placeholder="Task title"
+                >
+                
+                <div class="edit-meta">
+                  <input 
+                    type="date" 
+                    formControlName="dueDate" 
+                    class="edit-date"
+                    title="Due date"
+                  >
+                  
+                  <select formControlName="priority" class="edit-priority">
+                    <option value="low">🟢 Low</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="high">🔴 High</option>
+                  </select>
+                  
+                  <input
+                    type="text"
+                    formControlName="category"
+                    placeholder="Category"
+                    class="edit-category"
+                  >
+                  
+                  <input
+                    type="text"
+                    formControlName="tags"
+                    placeholder="Tags (comma separated)"
+                    class="edit-tags"
+                  >
+                </div>
+              </div>
+              
+              <div class="edit-actions">
+                <button type="submit" class="action-button save" title="Save">✅</button>
+                <button type="button" (click)="cancelEdit()" class="action-button cancel" title="Cancel">❌</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Drag preview -->
+          <div class="drag-preview" *cdkDragPreview>
+            <div class="task-preview">
+              {{ task.title }}
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Empty state -->
       <ng-template #noTasks>
         <div class="no-tasks">
           <div class="no-tasks-animation">
@@ -145,14 +388,16 @@
 
   <footer class="footer">
     <div class="footer-content">
-      <span class="footer-text">Built with Angular 16+ • Served by Caddy</span>
+      <span class="footer-text">Task Tracker Pro • Enhanced with priorities, due dates & more</span>
       <div class="footer-stats">
         {{ taskService.taskCounts().total }} tasks total
+        <span *ngIf="taskService.taskCounts().overdue > 0" class="overdue-count">
+          • {{ taskService.taskCounts().overdue }} overdue
+        </span>
       </div>
     </div>
   </footer>
 
   <!-- PWA Install Prompt -->
   <app-pwa-install></app-pwa-install>
-
 </div>

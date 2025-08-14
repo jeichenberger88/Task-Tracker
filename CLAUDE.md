@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Angular 20 Progressive Web App (PWA) task tracker that allows users to manage tasks with local storage persistence. The application uses standalone components, Angular signals for reactive state management, and includes PWA installation capabilities.
+**Task Tracker Pro** is an enhanced Angular 20 Progressive Web App (PWA) with advanced task management features including:
+- ✅ Due dates with notifications
+- 🔍 Advanced search and filtering  
+- 🏷️ Categories and tags system
+- 📱 Drag & drop reordering (Angular CDK)
+- 📥📤 Data export/import functionality
+- 🎨 Priority levels with visual indicators
+- 🌓 Dark/light theme support
+- 💾 Local storage persistence with migration support
 
 ## Development Commands
 
@@ -24,32 +32,40 @@ This is an Angular 20 Progressive Web App (PWA) task tracker that allows users t
 
 ### Core Technologies
 - **Angular 20** with standalone components architecture
+- **Angular CDK** for drag & drop functionality
 - **TypeScript 5.8** with strict mode enabled
-- **SCSS** for styling with dark theme support
+- **SCSS** for advanced styling with dark theme support
 - **Service Worker** for PWA functionality via @angular/service-worker
 - **Signals** for reactive state management (Angular's new reactivity model)
+- **Reactive Forms** for advanced form handling and validation
 
 ### Application Structure
 
 #### Services
-- **TaskService** (`src/app/services/task.service.ts`): Core business logic using Angular signals
-  - Uses `signal()` for reactive state management
-  - `computed()` signals for derived state (filtered tasks, counts)
-  - `effect()` for localStorage persistence
-  - Manages Task interface with id, title, completed, createdAt properties
+- **TaskService** (`src/app/services/task.service.ts`): Enhanced core business logic using Angular signals
+  - **Extended Task Interface**: id, title, completed, createdAt, dueDate, priority, category, tags, order
+  - **Signal-based State**: `tasksSignal`, `filterSignal`, `searchSignal`, `selectedCategorySignal`
+  - **Computed Properties**: `filteredTasks`, `taskCounts`, `categories`, `allTags`
+  - **Advanced Features**: Search/filter, drag & drop reordering, data export/import
+  - **Notifications**: Browser notification support for due/overdue tasks
+  - **Data Migration**: Automatic migration from old task format to new enhanced format
 
 #### Components
-- **AppComponent**: Main application shell with theme management
-- **TaskListComponent**: Displays filtered tasks with edit/delete functionality
-- **TaskInputComponent**: Form-based task creation with validation
+- **AppComponent**: Main application shell with comprehensive task management
+  - **Reactive Forms**: Advanced task creation with due dates, priorities, categories, tags
+  - **Search & Filter UI**: Real-time search and category filtering
+  - **Data Management**: Import/export functionality with file handling
+  - **Theme Management**: Dark/light mode with localStorage persistence
+  - **Notification Handling**: Due task notifications with permission management
+
 - **PwaInstallComponent**: Handles PWA installation prompts and events
 
-#### State Management Pattern
-The app uses Angular signals exclusively for state management:
-- Private `tasksSignal` for all tasks data
-- Public `filterSignal` for current filter state
-- Computed signals for derived state (filtered tasks, counts)
-- Effects for side effects (localStorage persistence)
+#### Enhanced State Management
+Advanced signal-based architecture:
+- **Multi-dimensional Filtering**: Status, search term, category, due date combinations
+- **Smart Sorting**: Priority, due date, order, and creation date based sorting
+- **Real-time Updates**: All UI updates automatically via computed signals
+- **Persistent State**: localStorage with automatic data migration
 
 ### PWA Configuration
 - **Service Worker**: Configured via `ngsw-config.json` with app shell and lazy asset caching
@@ -70,20 +86,33 @@ Simple route-based filtering system:
 
 ## Key Development Patterns
 
-### Component Architecture
-- All components use standalone: true (no NgModules)
-- Reactive Forms with FormControl for user input
-- Signal-based reactivity throughout the application
+### Enhanced Component Architecture
+- **Standalone Components**: All components use standalone: true (no NgModules)
+- **Reactive Forms**: Advanced FormBuilder usage with validation for complex forms
+- **Signal-based Reactivity**: Comprehensive use of signals, computed, and effects
+- **CDK Integration**: Angular CDK for drag & drop with proper event handling
+- **Type Safety**: Extensive use of TypeScript interfaces and proper typing
 
-### Styling Approach
-- Global SCSS with CSS custom properties for theming
-- Dark mode implementation via body class toggle
-- Component-scoped SCSS files
+### Advanced Styling System
+- **CSS Custom Properties**: Comprehensive theming system with light/dark modes
+- **Responsive Design**: Mobile-first approach with proper touch targets
+- **Accessibility**: WCAG compliant with proper ARIA labels and focus management
+- **Animations**: CSS animations with respect for prefers-reduced-motion
+- **Modern CSS**: Flexbox, Grid, backdrop-filter, and advanced selectors
 
-### Type Safety
-- Strict TypeScript configuration with comprehensive compiler options
-- Defined interfaces for all data structures (Task, FilterType)
-- Proper typing for all component properties and methods
+### Data Management Patterns
+- **Signal Architecture**: Multi-layered reactive state management
+- **Data Migration**: Automatic schema migration for backward compatibility
+- **Export/Import**: JSON-based data portability with validation
+- **Local Persistence**: Robust localStorage handling with error recovery
+- **Search & Filter**: Real-time multi-dimensional filtering system
+
+### User Experience Features
+- **Progressive Enhancement**: Works without JavaScript for basic functionality
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Touch Interactions**: Mobile-optimized touch targets and gestures
+- **Visual Feedback**: Priority colors, due date indicators, completion states
+- **Contextual UI**: Dynamic navigation based on task states and counts
 
 ## Deployment
 
