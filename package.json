@@ -1,13 +1,16 @@
 {
   "name": "task-tracker",
   "version": "0.0.0",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
-  "ng": "ng", 
-  "start": "ng serve",
-  "build": "ng build",
-  "watch": "ng build --watch --configuration development",
-  "test": "ng test"
-},
+    "ng": "npx ng",
+    "start": "npx ng serve",
+    "build": "npx @angular/cli build --configuration=production",
+    "watch": "npx ng build --watch --configuration development",
+    "test": "npx ng test"
+  },
   "prettier": {
     "overrides": [
       {
@@ -27,13 +30,13 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
     "@angular/service-worker": "^20.1.0",
+    "@angular/cli": "^20.1.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular/build": "^20.1.5",
-    "@angular/cli": "^20.1.5",
     "@angular/compiler-cli": "^20.1.0",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.8.0",
