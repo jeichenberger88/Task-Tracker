@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm install && ./node_modules/.bin/ng build --configuration=production",
+  "outputDirectory": "dist/browser",
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
