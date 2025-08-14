@@ -24,8 +24,8 @@ FROM caddy:2-alpine
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Copy built application from build stage
-# Angular 16+ default output path is dist/task-tracker/browser
-COPY --from=build /app/dist/task-tracker/browser /usr/share/caddy
+# Angular 20 output path is dist/browser
+COPY --from=build /app/dist/browser /usr/share/caddy
 
 # Expose port 80
 EXPOSE 80
