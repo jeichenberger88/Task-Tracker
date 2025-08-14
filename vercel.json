@@ -1,21 +1,8 @@
 {
-  "buildCommand": "npm run build:static",
-  "outputDirectory": "dist/browser",
   "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/manifest.json",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/manifest+json"
-        }
-      ]
     }
   ]
 }
