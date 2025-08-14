@@ -326,17 +326,41 @@
   margin-bottom: 2rem;
   position: relative;
   animation: slideInUp 0.3s ease;
+  max-width: 100%;
 }
 
 .panel-content h3 {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.5rem 0;
   color: var(--text-primary);
+  font-size: 1.25rem;
 }
 
-.panel-actions {
+.panel-section {
+  margin-bottom: 2rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.panel-section h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.panel-description {
+  margin: 0 0 1rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.panel-actions,
+.import-options {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
 .panel-btn {
@@ -351,6 +375,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.9rem;
   
   &:hover {
     transform: translateY(-2px);
@@ -359,6 +384,54 @@
   
   &.import-btn {
     background: var(--success);
+  }
+  
+  &.export-btn {
+    background: var(--info);
+  }
+}
+
+.format-info {
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.format-info h5 {
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.format-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.format-item {
+  font-size: 0.85rem;
+  
+  strong {
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.format-example {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  
+  code {
+    background: var(--bg-primary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-color);
   }
 }
 
@@ -371,9 +444,17 @@
   font-size: 1.2rem;
   cursor: pointer;
   color: var(--text-muted);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
   
   &:hover {
     color: var(--text-primary);
+    background: var(--bg-tertiary);
   }
 }
 

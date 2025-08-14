@@ -127,21 +127,53 @@
     <!-- Import/Export Panel -->
     <div class="import-export-panel" *ngIf="showImportExport">
       <div class="panel-content">
-        <h3>Data Management</h3>
-        <div class="panel-actions">
+        <h3>📊 Data Management</h3>
+        
+        <div class="panel-section">
+          <h4>📤 Export</h4>
+          <p class="panel-description">Export all your tasks to a JSON file</p>
           <button class="panel-btn export-btn" (click)="exportTasks()">
-            📤 Export Tasks
+            📤 Export Tasks (JSON)
           </button>
-          <label class="panel-btn import-btn">
-            📥 Import Tasks
-            <input
-              type="file"
-              accept=".json"
-              (change)="onFileSelected($event)"
-              style="display: none;"
-            >
-          </label>
         </div>
+
+        <div class="panel-section">
+          <h4>📥 Import</h4>
+          <p class="panel-description">Import tasks from various file formats</p>
+          <div class="import-options">
+            <label class="panel-btn import-btn">
+              📄 Import File
+              <input
+                type="file"
+                accept=".json,.csv,.txt,.md"
+                (change)="onFileSelected($event)"
+                style="display: none;"
+              >
+            </label>
+          </div>
+          
+          <div class="format-info">
+            <h5>📋 Supported Formats:</h5>
+            <div class="format-list">
+              <div class="format-item">
+                <strong>JSON (.json)</strong> - Full task data with all properties
+              </div>
+              <div class="format-item">
+                <strong>CSV (.csv)</strong> - Spreadsheet format
+                <div class="format-example">
+                  Headers: <code>title,completed,priority,category,tags,dueDate</code>
+                </div>
+              </div>
+              <div class="format-item">
+                <strong>Text (.txt, .md)</strong> - Simple task lists
+                <div class="format-example">
+                  Examples: <code>Task name</code>, <code>- Task name</code>, <code>[x] Completed task</code>, <code>Task!!! (high priority)</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <button class="close-panel" (click)="toggleImportExport()">✕</button>
       </div>
     </div>

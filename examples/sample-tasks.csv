@@ -1,0 +1,6 @@
+title,completed,priority,category,tags,dueDate
+"Buy groceries",false,medium,"Personal","shopping;errands","2024-01-15"
+"Finish project report",false,high,"Work","deadline;urgent","2024-01-10"
+"Call dentist",true,low,"Health","appointment","2024-01-05"
+"Plan vacation",false,medium,"Personal","travel;planning",""
+"Review code",false,high,"Work","code-review;development","2024-01-12"

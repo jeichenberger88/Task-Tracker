@@ -237,13 +237,37 @@ export class AppComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = (e) => {
         const content = e.target?.result as string;
-        if (this.taskService.importTasks(content)) {
-          alert('Tasks imported successfully!');
+        
+        // Detect format based on file extension
+        const format = this.detectFileFormat(file.name);
+        const result = this.taskService.importTasks(content, format);
+        
+        if (result.success) {
+          alert(result.message);
+          this.updateDocumentTitle();
         } else {
-          alert('Failed to import tasks. Please check the file format.');
+          alert(`Import failed: ${result.message}`);
         }
+        
+        // Reset file input
+        (event.target as HTMLInputElement).value = '';
       };
       reader.readAsText(file);
+    }
+  }
+
+  private detectFileFormat(fileName: string): 'json' | 'csv' | 'txt' {
+    const extension = fileName.toLowerCase().split('.').pop();
+    
+    switch (extension) {
+      case 'csv':
+        return 'csv';
+      case 'txt':
+      case 'md':
+        return 'txt';
+      case 'json':
+      default:
+        return 'json';
     }
   }
 
